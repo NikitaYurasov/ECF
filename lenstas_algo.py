@@ -1,11 +1,16 @@
 import sage.all
 from sage.sets.primes import Primes
+
 import sys
+import time
 from gmpy2 import mpz, f_mod
 import numpy as np
 
 from utils.misc import full_power
 from ECP import EllipticCurve, EllipticPoint, is_point
+from logger import logger
+
+log = logger.get_logger(__name__)
 
 
 class LenstraAlgorithm:
@@ -52,25 +57,28 @@ class LenstraAlgorithm:
             return False
 
     @staticmethod
-    def generate_random_curve(n):
+    def generate_random_curve(n, retries=10):
         """
         Функция генерирования случайной эллиптической кривой
         Parameters
         ----------
         n : Union[int, gmpy2.mpz]
             Факторизируемое число
+        retries : int
+            Количество повторений генерирования кривой
 
         Returns
         -------
         EllipticCurve
             Сгенерированная кривая (в случае удачи на 10 итерациях)
         """
-        for i in range(10):
+        for i in range(retries):
             try:
                 random_curve = EllipticCurve(n)
                 return random_curve
             except:
                 continue
+        log.error(f"После 10 попыток не удалось сгенерировать кривую, перезапустите модуль")
         sys.exit(1)
 
     def find_factor(self, n):
@@ -134,10 +142,13 @@ class LenstraAlgorithm:
         numpy.ndarray
             Отсортированный список простых делителей
         """
+        start_time = time.time()
         while len(self.not_prime_factors):
             current_factor = self.not_prime_factors[0]
             self.one_round_factorization(current_factor)
             self.not_prime_factors.pop(0)
+        end_time = time.time() - start_time
+        log.info(f"Факторизация выполнилась за {end_time} сек")
         return np.sort(self.prime_factors)
 
     def check_factorization(self, factors):
@@ -153,12 +164,3 @@ class LenstraAlgorithm:
             Верно ли разложено число
         """
         return self.n == np.prod(list(map(int, factors)))
-
-
-if __name__ == '__main__':
-    n = 2**83-1
-    print(f"Factorizing n = {n}")
-    algo = LenstraAlgorithm(n)
-    factors = algo.factorize()
-    if algo.check_factorization(factors):
-        print(f"{n} = {'*'.join(list(map(str, factors)))}")
