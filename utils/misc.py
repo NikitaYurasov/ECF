@@ -1,4 +1,19 @@
 def full_power(n):
+    """
+    Функция нахождения нахождения наибольшей степени и основания для заданного числа
+
+    n = base ^ power : power --> max, base --> min
+
+    Parameters
+    ----------
+    n : Union[gmpy2.mpz, int]
+        Число
+
+    Returns
+    -------
+    Tuple[int, Union[gmpy2.mpz, int]]
+        Максимальная степень, минимальное основание
+    """
     power = 1
     base = n
     right_bound = n
