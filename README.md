@@ -19,11 +19,22 @@ conda create -n sage sage python=3.8
 ```
 
 ## Использование через командную строку
+Для использования в терминале достаточно установить пакет:
+```shell
+git clone https://github.com/NikitaYurasov/ECF.git
+cd ECF
+```
+И выполнить следующую команду:
 ```shell
 python pyecf -n 9671406556917033397649407
 ```
 
 ## Использование в Python
+Пакет выложен на PyPi, так что достаточно просто установить его через *pip*:
+```shell
+pip install pyecf
+```
+Внутри проекта использование может выглядеть так:
 ```python
 from pyecf import LenstraAlgorithm
 
