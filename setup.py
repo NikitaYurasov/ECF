@@ -4,11 +4,11 @@ with open("requirements.txt", "r") as fh:
     reqs = fh.read()
 
 setup(
-    name='ecfpy',
+    name='pyecf',
     version="0.0.1",
     description='Elliptic Curve Factorization',
     python_requires='>=3.8',
-    author='MIEM',
+    author='Yurasov Nikita',
     author_email='n.yurasov@yahoo.com',
     license='MIT',
     packages=find_packages(),
