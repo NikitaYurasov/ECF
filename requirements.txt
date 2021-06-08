@@ -2,12 +2,22 @@
 
 # ECF/ECP/curve.py: 2
 # ECF/ECP/point.py: 1
-# ECF/lenstas_algo.py: 4
+# ECF/lenstas_algo.py: 6
 gmpy2 == 2.1.0b1
 
+# ECF/tests/speed_test.py: 4
+matplotlib == 3.4.1
+
 # ECF/ECP/curve.py: 1
-# ECF/lenstas_algo.py: 5
+# ECF/lenstas_algo.py: 7
 numpy == 1.20.2
 
+# ECF/setup.py: 1
+setuptools == 49.6.0.post20210108
+
 # ECF/lenstas_algo.py: 1,2
-sage == 9.2
+# ECF/tests/speed_test.py: 3
+sympy == 1.8
+
+# ECF/tests/speed_test.py: 2
+tqdm == 4.60.0
