@@ -1,5 +1,5 @@
-import sage.all
-from sage.sets.primes import Primes
+from sympy import prod
+from sympy.ntheory.primetest import isprime
 
 import sys
 import time
@@ -7,14 +7,14 @@ from gmpy2 import mpz, f_mod
 import numpy as np
 
 from utils.misc import full_power
-from ECP import EllipticCurve, EllipticPoint, is_point
+from ECP import EllipticCurve, EllipticPoint, is_point, IdentityEllipticPoint
 from logger import logger
 
 log = logger.get_logger(__name__)
 
 
 class LenstraAlgorithm:
-    def __init__(self, n):
+    def __init__(self, n, omega, nu):
         """
         Основной класс алгоритма факторизации числа с помощью алгоритма Ленстры
         Последовательно проходится по делителям числа <n>, проверяя на простоту. Если число составное, запускается
@@ -33,11 +33,11 @@ class LenstraAlgorithm:
             Число, которое необходимо разложить (рекомендуется использовать числа в 20-25 знаков или 64-83 бита)
         """
         self.n = n
+        self.omega_bound = omega if omega is not None else 100
+        self.nu_bound = nu if nu is not None else 10000
 
         self.not_prime_factors = [n]
         self.prime_factors = list()
-
-        self.pre_primes = Primes()
 
     def check_prime(self, n):
         """
@@ -51,34 +51,31 @@ class LenstraAlgorithm:
         bool
             Простое ли число
         """
-        if n in self.pre_primes:
-            return True
-        else:
-            return False
+        return isprime(int(n))
 
     @staticmethod
-    def generate_random_curve(n, retries=10):
+    def generate_random_curve(n):
         """
         Функция генерирования случайной эллиптической кривой
         Parameters
         ----------
         n : Union[int, gmpy2.mpz]
             Факторизируемое число
-        retries : int
-            Количество повторений генерирования кривой
 
         Returns
         -------
         EllipticCurve
             Сгенерированная кривая (в случае удачи на 10 итерациях)
         """
-        for i in range(retries):
+        counter = 0
+        while True or counter < 1e6:
             try:
                 random_curve = EllipticCurve(n)
                 return random_curve
             except:
+                counter += 1
                 continue
-        log.error(f"После 10 попыток не удалось сгенерировать кривую, перезапустите модуль")
+        log.error(f"После 1e6 попыток не удалось сгенерировать кривую, перезапустите модуль")
         sys.exit(1)
 
     def find_factor(self, n):
@@ -95,14 +92,18 @@ class LenstraAlgorithm:
         """
         random_curve = self.generate_random_curve(n)
         random_point = EllipticPoint(random_curve.x_point, random_curve.y_point, curve=random_curve)
-        k = np.random.randint(100000, 500000)
-        i = 2
-        while i < k:
+        r_i = np.arange(2, self.omega_bound)
+        m_i = np.floor(np.log(self.nu_bound + 2 * np.sqrt(self.nu_bound) + 1) / np.log(r_i))
+        max_power = int(prod(r_i ** m_i))
+        i = 1
+        while i < max_power:
             i += 1
-            random_point = random_point ** i
-            if not is_point(random_point):
-                return random_point
-        return mpz(1)
+            t = random_point ** i
+            if not is_point(t):
+                return t
+            if isinstance(t, IdentityEllipticPoint):
+                return None
+        return None
 
     def one_round_factorization(self, n):
         """
@@ -131,8 +132,12 @@ class LenstraAlgorithm:
                 self.not_prime_factors.append(mpz(n // 3))
             else:
                 divider = self.find_factor(n)
-                self.not_prime_factors.append(divider)
-                self.not_prime_factors.append(n // divider)
+                if divider is not None:
+                    self.not_prime_factors.append(divider)
+                    self.not_prime_factors.append(n // divider)
+                else:
+                    return False
+        return True
 
     def factorize(self):
         """
@@ -145,8 +150,8 @@ class LenstraAlgorithm:
         start_time = time.time()
         while len(self.not_prime_factors):
             current_factor = self.not_prime_factors[0]
-            self.one_round_factorization(current_factor)
-            self.not_prime_factors.pop(0)
+            if self.one_round_factorization(current_factor):
+                self.not_prime_factors.pop(0)
         end_time = time.time() - start_time
         log.info(f"Факторизация выполнилась за {end_time} сек")
         return np.sort(self.prime_factors)
@@ -163,4 +168,4 @@ class LenstraAlgorithm:
         bool
             Верно ли разложено число
         """
-        return self.n == np.prod(list(map(int, factors)))
+        return self.n == prod(list(map(int, factors)))
