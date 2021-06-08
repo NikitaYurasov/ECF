@@ -5,7 +5,7 @@ with open("requirements.txt", "r") as fh:
 
 setup(
     name='pyecf',
-    version="0.0.1",
+    version="0.0.2",
     description='Elliptic Curve Factorization',
     python_requires='>=3.8',
     author='Yurasov Nikita',
