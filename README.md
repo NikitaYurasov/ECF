@@ -5,30 +5,41 @@
 (факторизация, разложение на простые множители). В качестве метода факторизации
 используется [алгоритм](https://wstein.org/edu/124/lenstra/lenstra.pdf), предложенный Хендриком Ленстрой в 1987 году.
 
-## Использование через командную строку
-Для использования в терминале достаточно склонировать репозиторий и установить зависимости, используя `poetry` ([установка poetry](https://python-poetry.org/docs/#installation)):
+## Установка
+### PyPI
+Установите пакет используя pip (или любой другой менеджер зависимостей)
 ```shell
-git clone https://github.com/NikitaYurasov/ECF.git
-poetry install
-cd ECF
-```
-И выполнить следующую команду:
-```shell
-python pyecf.py -n 9671406556917033397649407
+# pip
+pip install pyecf
+
+# poetry
+poetry add pyecf
 ```
 
-## Использование в Python
-Пакет выложен на PyPi, так что достаточно просто установить его через *pip*:
+### Установка из исходников
+Склонируйте репозиторий, и установите зависимости:
 ```shell
-pip install pyecf
+git clone https://github.com/NikitaYurasov/ECF.git
+cd ECF
+# [poetry](https://python-poetry.org/docs/#installation)
+poetry install
+
+# или [pip](https://pip.pypa.io/en/stable/installation/)
+pip install -r requirements.txt
 ```
-Внутри проекта использование может выглядеть так:
+
+## Использование
 ```python
 from pyecf import LenstraAlgorithm
 
 n = 9671406556917033397649407
 algo = LenstraAlgorithm(n)
 factors = algo.factorize() # factors - отсортированный список делителей
+```
+
+Или через cli:
+```shell
+pyecf 9671406556917033397649407  # или любое другое число
 ```
 
 ## Описание алгоритма
