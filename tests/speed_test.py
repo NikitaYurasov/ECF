@@ -1,7 +1,9 @@
 import time
-from tqdm import tqdm
-from sympy import prod, sieve, prime
+
 import matplotlib.pyplot as plt
+from sympy import prime, prod, sieve
+from tqdm import tqdm
+
 from pyecf import LenstraAlgorithm
 
 n_numbers = 100

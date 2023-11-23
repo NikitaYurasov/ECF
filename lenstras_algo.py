@@ -1,14 +1,14 @@
+import sys
+import time
+
+import numpy as np
+from gmpy2 import f_mod, mpz
 from sympy import prod
 from sympy.ntheory.primetest import isprime
 
-import sys
-import time
-from gmpy2 import mpz, f_mod
-import numpy as np
-
-from utils.misc import full_power
-from ECP import EllipticCurve, EllipticPoint, is_point, IdentityEllipticPoint
+from ECP import EllipticCurve, EllipticPoint, IdentityEllipticPoint, is_point
 from logger import logger
+from utils.misc import full_power
 
 log = logger.get_logger(__name__)
 
@@ -94,11 +94,11 @@ class LenstraAlgorithm:
         random_point = EllipticPoint(random_curve.x_point, random_curve.y_point, curve=random_curve)
         r_i = np.arange(2, self.omega_bound)
         m_i = np.floor(np.log(self.nu_bound + 2 * np.sqrt(self.nu_bound) + 1) / np.log(r_i))
-        max_power = prod(r_i ** m_i)
+        max_power = prod(r_i**m_i)
         i = 1
         while i < max_power:
             i += 1
-            t = random_point ** i
+            t = random_point**i
             if not is_point(t):
                 return t
             if isinstance(t, IdentityEllipticPoint):

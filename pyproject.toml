@@ -17,7 +17,18 @@ typer = "^0.9"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
+black = "^23.3"
+isort = "^5.12"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+skip-string-normalization = true
+
+[tool.isort]
+line_length = 120
+profile = "black"
+

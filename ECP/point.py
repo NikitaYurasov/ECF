@@ -1,4 +1,4 @@
-from gmpy2 import gcd, invert, f_mod
+from gmpy2 import f_mod, gcd, invert
 
 
 def is_point(point):
@@ -109,7 +109,7 @@ class EllipticPoint:
             if d == 1:
                 iv = invert(f_mod(self.x - other.x, self.curve.n), self.curve.n)
                 s = f_mod((self.y - other.y) * iv, self.curve.n)
-                x_res = f_mod(s ** 2 - self.x - other.x, self.curve.n)
+                x_res = f_mod(s**2 - self.x - other.x, self.curve.n)
                 y_res = f_mod(-self.y - s * (x_res - self.x), self.curve.n)
                 return EllipticPoint(x=x_res, y=y_res, curve=self.curve)
             else:
