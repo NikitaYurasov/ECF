@@ -1,6 +1,6 @@
 import argparse
 
-from lenstas_algo import LenstraAlgorithm
+from lenstras_algo import LenstraAlgorithm
 from logger import logger
 
 if __name__ == '__main__':

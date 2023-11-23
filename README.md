@@ -6,14 +6,15 @@
 используется [алгоритм](https://wstein.org/edu/124/lenstra/lenstra.pdf), предложенный Хендриком Ленстрой в 1987 году.
 
 ## Использование через командную строку
-Для использования в терминале достаточно установить пакет:
+Для использования в терминале достаточно склонировать репозиторий и установить зависимости, используя `poetry` ([установка poetry](https://python-poetry.org/docs/#installation)):
 ```shell
 git clone https://github.com/NikitaYurasov/ECF.git
+poetry install
 cd ECF
 ```
 И выполнить следующую команду:
 ```shell
-python pyecf -n 9671406556917033397649407
+python pyecf.py -n 9671406556917033397649407
 ```
 
 ## Использование в Python
