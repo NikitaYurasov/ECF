@@ -1,3 +1,4 @@
+import logging
 import sys
 import time
 
@@ -6,15 +7,12 @@ from gmpy2 import f_mod, mpz
 from sympy import prod
 from sympy.ntheory.primetest import isprime
 
-from ECP import EllipticCurve, EllipticPoint, IdentityEllipticPoint, is_point
-from logger import logger
-from utils.misc import full_power
-
-log = logger.get_logger(__name__)
+from .ecp import EllipticCurve, EllipticPoint, IdentityEllipticPoint, is_point
+from .utils.misc import full_power
 
 
 class LenstraAlgorithm:
-    def __init__(self, n, omega, nu):
+    def __init__(self, n: int, omega: int = 100, nu: int = 10000):
         """
         Основной класс алгоритма факторизации числа с помощью алгоритма Ленстры
         Последовательно проходится по делителям числа <n>, проверяя на простоту. Если число составное, запускается
@@ -39,7 +37,8 @@ class LenstraAlgorithm:
         self.not_prime_factors = [n]
         self.prime_factors = list()
 
-    def check_prime(self, n):
+    @staticmethod
+    def check_prime(n):
         """
         Функция проверки простоты числа (используется класс Primes из библиотеки sage)
         Parameters
@@ -75,7 +74,7 @@ class LenstraAlgorithm:
             except:
                 counter += 1
                 continue
-        log.error(f"После 1e6 попыток не удалось сгенерировать кривую, перезапустите модуль")
+        logging.error(f"После 1e6 попыток не удалось сгенерировать кривую, перезапустите модуль")
         sys.exit(1)
 
     def find_factor(self, n):
@@ -153,7 +152,7 @@ class LenstraAlgorithm:
             if self.one_round_factorization(current_factor):
                 self.not_prime_factors.pop(0)
         end_time = time.time() - start_time
-        log.info(f"Факторизация выполнилась за {end_time} сек")
+        logging.info(f"Факторизация выполнилась за {end_time} сек")
         return np.sort(self.prime_factors)
 
     def check_factorization(self, factors):

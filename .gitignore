@@ -1,0 +1,23 @@
+# Environments
+.env
+.venv
+.dbt
+.gradle
+env/
+venv/
+*.code-workspace
+*.pyc
+.pytest_cache
+__pycache__/
+
+logs
+target
+
+.DS_Store
+
+
+.eggs
+
+build
+dist
+*.egg-info
