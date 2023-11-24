@@ -1,5 +1,5 @@
 import numpy as np
-from gmpy2 import random_state, mpz_random, f_mod
+from gmpy2 import f_mod, mpz_random, random_state
 
 from .point import EllipticPoint
 
@@ -18,7 +18,7 @@ class EllipticCurve:
         self.x_point = self.generate_random_number()
         self.y_point = self.generate_random_number()
         self.A = self.generate_random_number()
-        self.B = f_mod(self.y_point ** 2 - self.x_point ** 3 - self.A * self.x_point, self.n)
+        self.B = f_mod(self.y_point**2 - self.x_point**3 - self.A * self.x_point, self.n)
 
         if not self.check_singularity():
             raise Exception
@@ -72,4 +72,4 @@ class EllipticCurve:
         bool
             Принадлежит ли точка кривой
         """
-        return f_mod(point.y ** 2, self.n) == f_mod(point.x ** 3 + self.A * point.x + self.B, self.n)
+        return f_mod(point.y**2, self.n) == f_mod(point.x**3 + self.A * point.x + self.B, self.n)
